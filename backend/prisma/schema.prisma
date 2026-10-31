@@ -14,7 +14,8 @@ datasource db {
 // Perfis de acesso possíveis de um usuário
 enum Role {
   CLIENTE // cliente que faz pedidos (padrão para quem se cadastra no site)
-  STAFF // funcionário (acompanha e atualiza os pedidos)
+  STAFF // funcionário do salão (garçom): lança pedidos de mesa e só vê os que ele lançou
+  COZINHA // cozinha: vê TODOS os pedidos no painel e atualiza o andamento
   ADMIN // administrador (também gerencia o cardápio)
 }
 
@@ -32,6 +33,7 @@ enum StatusPedido {
 enum TipoEntrega {
   ENTREGA // delivery no endereço informado
   RETIRADA // o cliente busca no balcão
+  MESA // consumo no salão: o funcionário lança o pedido da mesa
 }
 
 // Formas de pagamento aceitas (pagamento na entrega/retirada)
@@ -82,7 +84,9 @@ model Pedido {
   status         StatusPedido   @default(PENDENTE)
   tipoEntrega    TipoEntrega
   endereco       String? // obrigatório só quando tipoEntrega = ENTREGA
-  telefone       String
+  telefone       String? // obrigatório no site (ENTREGA/RETIRADA); vazio nos pedidos de MESA
+  mesa           Int? // número da mesa (só quando tipoEntrega = MESA)
+  nomeCliente    String? // nome de quem está na mesa (opcional, só em MESA)
   formaPagamento FormaPagamento
   trocoPara      Float? // se pagar em dinheiro: para quanto precisa de troco
   observacao     String?

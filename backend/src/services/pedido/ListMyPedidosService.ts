@@ -6,7 +6,9 @@ import { pedidoInclude } from "./pedidoInclude";
 class ListMyPedidosService {
   async execute(user_id: string) {
     const pedidos = await prismaClient.pedido.findMany({
-      where: { userId: user_id },
+      // Pedidos de MESA ficam no nome do funcionário que lançou, mas não são "dele":
+      // por isso não aparecem aqui (a equipe vê esses pedidos na tela de Mesas/Cozinha)
+      where: { userId: user_id, tipoEntrega: { not: "MESA" } },
       include: pedidoInclude,
       // Mais recentes primeiro
       orderBy: { createdAt: "desc" },

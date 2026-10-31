@@ -14,6 +14,15 @@ const app = express();
 app.use(express.json());
 // Habilita o CORS para todas as rotas
 app.use(cors());
+// Rota de status da API (abrir http://localhost:3333 no navegador mostra se está no ar)
+app.get("/", (_req: Request, res: Response) => {
+  res.json({
+    nome: "404 Burger API",
+    slogan: "Fome Not Found",
+    status: "online",
+  });
+});
+
 // Registra as rotas da aplicação
 app.use(router);
 

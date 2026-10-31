@@ -2,13 +2,8 @@
 import prismaClient from "../../prisma";
 // Importa os dados relacionados e a taxa de entrega
 import { pedidoInclude, TAXA_ENTREGA } from "./pedidoInclude";
-
-// Formato de cada item enviado pelo cliente
-interface ItemProps {
-  lancheId: string;
-  quantidade: number;
-  observacao?: string;
-}
+// Monta os itens com o preço do banco e calcula o subtotal
+import { ItemProps, montarItensPedido } from "./montarItensPedido";
 
 // Formato dos dados necessários para criar um pedido
 interface CreatePedidoProps {
@@ -22,7 +17,7 @@ interface CreatePedidoProps {
   observacao?: string;
 }
 
-// Classe responsável pela REGRA DE NEGÓCIO de fazer um pedido
+// Classe responsável pela REGRA DE NEGÓCIO de fazer um pedido pelo site
 class CreatePedidoService {
   async execute({
     user_id,
@@ -34,39 +29,9 @@ class CreatePedidoService {
     trocoPara,
     observacao,
   }: CreatePedidoProps) {
-    // Busca no banco todos os lanches do pedido de uma vez só
-    const lanches = await prismaClient.lanche.findMany({
-      where: {
-        id: { in: itens.map((item) => item.lancheId) },
-      },
-    });
-
-    // Monta os itens usando o preço que está NO BANCO
-    // (nunca confiamos no preço enviado pelo front-end)
-    const itensPedido = itens.map((item) => {
-      const lanche = lanches.find((l) => l.id === item.lancheId);
-
-      if (!lanche) {
-        throw new Error("Um dos lanches do pedido não existe");
-      }
-
-      if (!lanche.disponivel) {
-        throw new Error(`O lanche "${lanche.nome}" não está disponível no momento`);
-      }
-
-      return {
-        lancheId: lanche.id,
-        quantidade: item.quantidade,
-        precoUnitario: lanche.preco,
-        observacao: item.observacao || null,
-      };
-    });
+    const { itensPedido, subtotal } = await montarItensPedido(itens);
 
     // Calcula os valores (arredondando para 2 casas decimais)
-    const subtotal =
-      Math.round(
-        itensPedido.reduce((soma, i) => soma + i.precoUnitario * i.quantidade, 0) * 100
-      ) / 100;
     const taxaEntrega = tipoEntrega === "ENTREGA" ? TAXA_ENTREGA : 0;
     const total = Math.round((subtotal + taxaEntrega) * 100) / 100;
 

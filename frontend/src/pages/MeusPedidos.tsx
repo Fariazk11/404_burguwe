@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, getErrorMessage } from "../services/api";
-import { Pedido, formatDate, formatPrice } from "../types";
+import { Pedido, destinoPedido, formatDate, formatPrice } from "../types";
 import { StatusBadge } from "../components/StatusPedido";
 
 // Lista os pedidos do cliente logado (rota GET /pedidos/me)
@@ -42,7 +42,7 @@ export function MeusPedidos() {
               <strong>Pedido #{pedido.numero}</strong>
               <p className="muted small">
                 {formatDate(pedido.createdAt)} •{" "}
-                {pedido.tipoEntrega === "ENTREGA" ? "Entrega" : "Retirada"}
+                {destinoPedido(pedido)}
               </p>
               <p className="small">
                 {pedido.itens.map((i) => `${i.quantidade}x ${i.lanche.nome}`).join(", ")}

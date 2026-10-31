@@ -105,10 +105,17 @@ export function PedidoDetalhe() {
         <section className="card info-list">
           <h2>Entrega e pagamento</h2>
           <p>
-            <strong>{pedido.tipoEntrega === "ENTREGA" ? "🛵 Entrega" : "🏪 Retirada no balcão"}</strong>
+            <strong>
+              {pedido.tipoEntrega === "ENTREGA"
+                ? "🛵 Entrega"
+                : pedido.tipoEntrega === "MESA"
+                  ? `🍽️ Mesa ${pedido.mesa}`
+                  : "🏪 Retirada no balcão"}
+            </strong>
           </p>
+          {pedido.nomeCliente && <p>👤 {pedido.nomeCliente}</p>}
           {pedido.endereco && <p>{pedido.endereco}</p>}
-          <p>📞 {pedido.telefone}</p>
+          {pedido.telefone && <p>📞 {pedido.telefone}</p>}
           <p>
             💳 {PAGAMENTO_LABEL[pedido.formaPagamento]}
             {pedido.trocoPara && ` — troco para ${formatPrice(pedido.trocoPara)}`}
@@ -120,9 +127,15 @@ export function PedidoDetalhe() {
       {error && <p className="alert alert-error">{error}</p>}
 
       <div className="actions">
-        <Link to="/pedidos" className="btn-outline btn">
-          Meus pedidos
-        </Link>
+        {pedido.tipoEntrega === "MESA" ? (
+          <Link to="/mesas" className="btn-outline btn">
+            Voltar para as mesas
+          </Link>
+        ) : (
+          <Link to="/pedidos" className="btn-outline btn">
+            Meus pedidos
+          </Link>
+        )}
         {/* O cliente só pode cancelar enquanto a cozinha não começou */}
         {pedido.status === "PENDENTE" && (
           <button className="btn-danger" onClick={cancelar} disabled={canceling}>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#2A0A4A"/>
+      <stop offset="100%" stop-color="#0D0221"/>
+    </radialGradient>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="2" fill="#FFFFFF" opacity="0.035"/>
+    </pattern>
+    <!-- mordida pixelada -->
+    <mask id="bite">
+      <rect x="0" y="0" width="1024" height="1024" fill="#fff"/>
+      <g fill="#000">
+        <rect x="652" y="170" width="120" height="40"/>
+        <rect x="612" y="200" width="160" height="40"/>
+        <rect x="652" y="240" width="120" height="40"/>
+        <rect x="697" y="280" width="80" height="60"/>
+      </g>
+    </mask>
+  </defs>
+
+  <!-- fundo -->
+  <rect x="0" y="0" width="1024" height="1024" rx="64" fill="url(#bg)"/>
+  <!-- grade perspectiva -->
+  <g stroke="#7B2CBF" stroke-width="2" opacity="0.35">
+    <line x1="0" y1="900" x2="1024" y2="900"/>
+    <line x1="0" y1="935" x2="1024" y2="935"/>
+    <line x1="0" y1="975" x2="1024" y2="975"/>
+    <line x1="512" y1="870" x2="512" y2="1024"/>
+    <line x1="512" y1="870" x2="300" y2="1024"/>
+    <line x1="512" y1="870" x2="724" y2="1024"/>
+    <line x1="512" y1="870" x2="80" y2="1024"/>
+    <line x1="512" y1="870" x2="944" y2="1024"/>
+  </g>
+  <rect x="0" y="0" width="1024" height="1024" rx="64" fill="url(#scan)"/>
+
+  <!-- moldura neon com cantos cortados -->
+  <path d="M110,50 L914,50 L974,110 L974,914 L914,974 L110,974 L50,914 L50,110 Z" fill="none" stroke="#FF2A6D" stroke-width="6" filter="url(#softglow)"/>
+  <path d="M74,140 L74,74 L140,74 M884,950 L950,950 L950,884" fill="none" stroke="#05D9E8" stroke-width="6" filter="url(#softglow)"/>
+
+  <!-- hambúrguer neon -->
+  <g filter="url(#glow)" stroke-linejoin="round" stroke-linecap="round">
+    <g mask="url(#bite)">
+      <path d="M312,330 C312,170 712,170 712,330 Z" fill="#1A0533" stroke="#FFE600" stroke-width="10"/>
+      <g fill="#FFE600">
+        <rect x="402" y="245" width="16" height="8" rx="2"/>
+        <rect x="470" y="220" width="16" height="8" rx="2"/>
+        <rect x="540" y="232" width="16" height="8" rx="2"/>
+        <rect x="440" y="282" width="16" height="8" rx="2"/>
+        <rect x="370" y="295" width="16" height="8" rx="2"/>
+      </g>
+    </g>
+    <polyline points="612,216 612,240 652,240 652,280 692,280 692,330" fill="none" stroke="#FFE600" stroke-width="9" stroke-linejoin="miter" stroke-linecap="square"/>
+    <!-- pixels da mordida soltos -->
+    <g fill="#FFE600">
+      <rect x="790" y="190" width="18" height="18"/>
+      <rect x="820" y="240" width="12" height="12"/>
+      <rect x="784" y="285" width="10" height="10"/>
+    </g>
+    <path d="M298,350 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0 q20,22 40,0" fill="none" stroke="#39FF14" stroke-width="9"/>
+    <rect x="300" y="384" width="424" height="54" rx="27" fill="#1A0533" stroke="#FF2A6D" stroke-width="10"/>
+    <path d="M340,411 h40 M420,411 h70 M530,411 h40 M610,411 h70" stroke="#FF2A6D" stroke-width="6" opacity="0.8"/>
+    <path d="M312,458 L712,458 C712,520 312,520 312,458 Z" fill="#1A0533" stroke="#05D9E8" stroke-width="10"/>
+  </g>
+
+  <!-- 404 glitch -->
+  <g font-family="Inter Display, Inter, DejaVu Sans, Arial Black, sans-serif" font-weight="900" font-size="250" text-anchor="middle" letter-spacing="10">
+    <text x="500" y="742" fill="#05D9E8" opacity="0.85">404</text>
+    <text x="524" y="742" fill="#FF2A6D" opacity="0.85">404</text>
+    <text x="512" y="742" fill="#FFFFFF" filter="url(#softglow)">404</text>
+  </g>
+  <!-- fatias de glitch -->
+  <rect x="300" y="610" width="200" height="10" fill="#05D9E8" opacity="0.9"/>
+  <rect x="560" y="676" width="230" height="8" fill="#FF2A6D" opacity="0.9"/>
+  <rect x="250" y="700" width="90" height="6" fill="#FFE600" opacity="0.9"/>
+  <rect x="660" y="590" width="60" height="6" fill="#FFE600" opacity="0.9"/>
+
+  <!-- BURGER -->
+  <text x="512" y="818" text-anchor="middle" font-family="Inter Display, Inter, DejaVu Sans, sans-serif" font-weight="900" font-size="82" letter-spacing="34" fill="#05D9E8" filter="url(#softglow)">BURGER</text>
+
+  <!-- slogan terminal -->
+  <rect x="262" y="846" width="500" height="54" rx="6" fill="#0D0221" stroke="#FFE600" stroke-width="3"/>
+  <text x="512" y="883" text-anchor="middle" font-family="DejaVu Sans Mono, Courier, monospace" font-weight="bold" font-size="30" fill="#FFE600" letter-spacing="2">&gt; FOME NOT FOUND_</text>
+</svg>

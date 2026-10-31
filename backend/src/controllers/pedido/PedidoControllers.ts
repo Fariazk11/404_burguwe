@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 // Importa os services de pedido
 import { CreatePedidoService } from "../../services/pedido/CreatePedidoService";
+import { CreatePedidoMesaService } from "../../services/pedido/CreatePedidoMesaService";
 import { ListMyPedidosService } from "../../services/pedido/ListMyPedidosService";
 import { ListPedidosService } from "../../services/pedido/ListPedidosService";
 import { DetailPedidoService } from "../../services/pedido/DetailPedidoService";
@@ -37,6 +38,25 @@ class CreatePedidoController {
   }
 }
 
+// Rota POST /pedidos/mesa: o funcionário lança o pedido de uma mesa
+class CreatePedidoMesaController {
+  async handle(req: Request, res: Response) {
+    const { itens, mesa, nomeCliente, formaPagamento, trocoPara, observacao } = req.body;
+
+    const pedido = await new CreatePedidoMesaService().execute({
+      funcionario_id: req.user_id,
+      itens,
+      mesa,
+      nomeCliente,
+      formaPagamento,
+      trocoPara,
+      observacao,
+    });
+
+    return res.status(201).json(pedido);
+  }
+}
+
 // Rota GET /pedidos/me: pedidos do usuário logado
 class ListMyPedidosController {
   async handle(req: Request, res: Response) {
@@ -45,13 +65,13 @@ class ListMyPedidosController {
   }
 }
 
-// Rota GET /pedidos?status=PENDENTE: todos os pedidos (equipe)
+// Rota GET /pedidos?status=PENDENTE: todos os pedidos (ADMIN) ou só os do funcionário (STAFF)
 class ListPedidosController {
   async handle(req: Request, res: Response) {
     // O filtro vem na query string; só aceitamos texto
     const status = typeof req.query.status === "string" ? req.query.status : undefined;
 
-    const pedidos = await new ListPedidosService().execute(status);
+    const pedidos = await new ListPedidosService().execute(status, req.user_id, req.user_role);
     return res.json(pedidos);
   }
 }
@@ -72,7 +92,9 @@ class UpdateStatusPedidoController {
   async handle(req: Request, res: Response) {
     const pedido = await new UpdateStatusPedidoService().execute(
       req.params.id as string,
-      req.body.status
+      req.body.status,
+      req.user_id,
+      req.user_role
     );
     return res.json(pedido);
   }
@@ -91,6 +113,7 @@ class CancelPedidoController {
 
 export {
   CreatePedidoController,
+  CreatePedidoMesaController,
   ListMyPedidosController,
   ListPedidosController,
   DetailPedidoController,

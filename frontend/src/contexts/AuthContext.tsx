@@ -8,7 +8,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "CLIENTE" | "STAFF" | "ADMIN";
+  role: "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
 }
 
 // Tudo o que o contexto disponibiliza para as telas

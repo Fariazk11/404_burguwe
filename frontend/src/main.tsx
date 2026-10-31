@@ -14,6 +14,8 @@ import { Checkout } from "./pages/Checkout";
 import { MeusPedidos } from "./pages/MeusPedidos";
 import { PedidoDetalhe } from "./pages/PedidoDetalhe";
 import { Painel } from "./pages/Painel";
+import { Mesas } from "./pages/Mesas";
+import { Funcionarios } from "./pages/Funcionarios";
 import { AdminLanches } from "./pages/AdminLanches";
 import { LancheForm } from "./pages/LancheForm";
 import "./styles/global.css";
@@ -31,20 +33,30 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
 
-              {/* Rotas que exigem login (qualquer perfil) */}
-              <Route element={<PrivateRoute />}>
+              {/* Rotas de quem compra pelo site (cliente e admin; funcionário não) */}
+              <Route element={<PrivateRoute roles={["CLIENTE", "ADMIN"]} />}>
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/pedidos" element={<MeusPedidos />} />
+              </Route>
+
+              {/* Detalhe de um pedido: qualquer perfil (o backend só mostra se o pedido for dele) */}
+              <Route element={<PrivateRoute />}>
                 <Route path="/pedidos/:id" element={<PedidoDetalhe />} />
               </Route>
 
-              {/* Rotas da equipe (STAFF ou ADMIN) */}
+              {/* Garçom (STAFF) e ADMIN: lançar os pedidos das mesas */}
               <Route element={<PrivateRoute roles={["STAFF", "ADMIN"]} />}>
+                <Route path="/mesas" element={<Mesas />} />
+              </Route>
+
+              {/* Painel da cozinha: perfil COZINHA e ADMIN (veem os pedidos de todos) */}
+              <Route element={<PrivateRoute roles={["COZINHA", "ADMIN"]} />}>
                 <Route path="/painel" element={<Painel />} />
               </Route>
 
               {/* Rotas somente ADMIN */}
               <Route element={<PrivateRoute roles={["ADMIN"]} />}>
+                <Route path="/admin/funcionarios" element={<Funcionarios />} />
                 <Route path="/admin/lanches" element={<AdminLanches />} />
                 <Route path="/admin/lanches/novo" element={<LancheForm />} />
                 <Route path="/admin/lanches/:id" element={<LancheForm />} />

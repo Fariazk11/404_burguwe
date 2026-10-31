@@ -22,7 +22,7 @@ export type StatusPedido =
   | "ENTREGUE"
   | "CANCELADO";
 
-export type TipoEntrega = "ENTREGA" | "RETIRADA";
+export type TipoEntrega = "ENTREGA" | "RETIRADA" | "MESA";
 export type FormaPagamento = "PIX" | "CARTAO" | "DINHEIRO";
 
 // Item de um pedido (com o nome do lanche que veio no include)
@@ -41,7 +41,9 @@ export interface Pedido {
   status: StatusPedido;
   tipoEntrega: TipoEntrega;
   endereco: string | null;
-  telefone: string;
+  telefone: string | null; // vazio nos pedidos de MESA
+  mesa: number | null; // número da mesa (só em pedidos de MESA)
+  nomeCliente: string | null; // nome de quem está na mesa (opcional)
   formaPagamento: FormaPagamento;
   trocoPara: number | null;
   observacao: string | null;
@@ -79,3 +81,11 @@ export const formatPrice = (value: number) =>
 // Formata data e hora: "31/10/2026 14:05"
 export const formatDate = (value: string) =>
   new Date(value).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+
+// Texto curto de onde o pedido vai: "Entrega", "Retirada" ou "Mesa 7"
+export const destinoPedido = (pedido: Pick<Pedido, "tipoEntrega" | "mesa">) =>
+  pedido.tipoEntrega === "MESA"
+    ? `Mesa ${pedido.mesa}`
+    : pedido.tipoEntrega === "ENTREGA"
+      ? "Entrega"
+      : "Retirada";

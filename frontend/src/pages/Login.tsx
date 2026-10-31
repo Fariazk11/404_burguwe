@@ -43,8 +43,9 @@ export function Login() {
   return (
     <div className="auth-page">
       <form className="card auth-card" onSubmit={handleSubmit}>
+        <img src="/img/logo-404-burger.svg" alt="404 Burger" className="auth-logo" />
         <h1>Entrar</h1>
-        <p className="muted">Entre para fazer e acompanhar seus pedidos</p>
+        <p className="muted mono">&gt; autentique-se para fazer e acompanhar seus pedidos_</p>
 
         <label>
           E-mail

@@ -8,12 +8,14 @@ interface CreateUserProps {
   name: string;
   email: string;
   password: string;
+  // Perfil da conta: o cadastro do site cria CLIENTE; o ADMIN cria STAFF (garçom) ou COZINHA
+  role?: "CLIENTE" | "STAFF" | "COZINHA";
 }
 
 // Classe responsável pela REGRA DE NEGÓCIO de cadastrar um usuário
 class CreateUserService {
   // Método principal do service: recebe os dados e cadastra o usuário
-  async execute({ name, email, password }: CreateUserProps) {
+  async execute({ name, email, password, role = "CLIENTE" }: CreateUserProps) {
     // Procura no banco se já existe um usuário com o mesmo e-mail
     const userAlreadyExists = await prismaClient.user.findFirst({
       where: {
@@ -35,6 +37,7 @@ class CreateUserService {
         name: name,
         email: email,
         password: passwordHash,
+        role: role,
       },
       // select define quais campos serão RETORNADOS (a senha NÃO é retornada)
       select: {

@@ -41,8 +41,9 @@ export function Cadastro() {
   return (
     <div className="auth-page">
       <form className="card auth-card" onSubmit={handleSubmit}>
+        <img src="/img/logo-404-burger.svg" alt="404 Burger" className="auth-logo" />
         <h1>Criar conta</h1>
-        <p className="muted">Cadastre-se para fazer seu pedido</p>
+        <p className="muted mono">&gt; registre seu ID na rede para fazer seu pedido_</p>
 
         <label>
           Nome

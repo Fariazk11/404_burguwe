@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, getErrorMessage } from "../services/api";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 import { Lanche, formatPrice } from "../types";
 import { LancheImage } from "../components/LancheImage";
@@ -9,6 +11,7 @@ const FILTROS = ["Todos", "Pequeno", "Médio", "Grande"];
 
 // Página inicial: banner + cardápio com botão de adicionar ao carrinho
 export function Home() {
+  const { user } = useAuth();
   const { items, addItem, openCart, totalItens, subtotal } = useCart();
 
   const [lanches, setLanches] = useState<Lanche[]>([]);
@@ -26,6 +29,14 @@ export function Home() {
       .finally(() => setLoading(false));
   }, []);
 
+  // A equipe não usa a loja: o garçom vai para as mesas e a cozinha para o painel
+  if (user?.role === "STAFF") {
+    return <Navigate to="/mesas" replace />;
+  }
+  if (user?.role === "COZINHA") {
+    return <Navigate to="/painel" replace />;
+  }
+
   // Quantas unidades deste lanche já estão no carrinho
   const qtdNoCarrinho = (id: string) =>
     items.find((i) => i.lanche.id === id)?.quantidade ?? 0;
@@ -42,19 +53,29 @@ export function Home() {
   return (
     <>
       <section className="hero">
-        <div>
-          <h1>Fome? A gente resolve. 🍔</h1>
-          <p>Hambúrgueres artesanais feitos na hora. Peça para entrega ou retire no balcão.</p>
+        <div className="hero-text">
+          <p className="hero-terminal">&gt; erro 404: fome não encontrada_</p>
+          <h1>
+            Sua fome foi <span className="glitch" data-text="deletada">deletada</span>.
+          </h1>
+          <p>
+            Hambúrgueres artesanais forjados na chapa da megacidade. Peça para entrega por
+            drone-moto ou retire no balcão do nosso food-bunker.
+          </p>
           <div className="hero-info">
             <span>🛵 Entrega em ~40 min</span>
             <span>🏪 Retirada em ~20 min</span>
             <span>💳 Pix, cartão ou dinheiro</span>
           </div>
         </div>
+        {/* Logo neon da pasta public/img */}
+        <img src="/img/logo-404-burger.png" alt="404 Burger" className="hero-logo" />
       </section>
 
       <div className="menu-toolbar">
-        <h2>Cardápio</h2>
+        <h2>
+          <span className="h-prefix">//</span> Cardápio
+        </h2>
         <div className="chips">
           {FILTROS.map((f) => (
             <button
@@ -70,14 +91,14 @@ export function Home() {
           className="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="🔍 Buscar por nome ou ingrediente..."
+          placeholder="> buscar por nome ou ingrediente..."
         />
       </div>
 
-      {loading && <p className="muted">Carregando cardápio...</p>}
+      {loading && <p className="muted mono">&gt; baixando cardápio da rede...</p>}
       {error && <p className="alert alert-error">{error}</p>}
       {!loading && !error && filtered.length === 0 && (
-        <p className="muted">Nenhum lanche encontrado.</p>
+        <p className="muted mono">&gt; 404: nenhum lanche encontrado_</p>
       )}
 
       <div className="grid">

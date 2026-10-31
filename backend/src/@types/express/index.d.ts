@@ -5,5 +5,7 @@ declare namespace Express {
   export interface Request {
     // id do usuário que está autenticado (vem do "sub" do token JWT)
     user_id: string;
+    // perfil do usuário (preenchido pelo middleware hasRole)
+    user_role: "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
   }
 }

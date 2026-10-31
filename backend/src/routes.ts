@@ -8,18 +8,26 @@ import { validateSchema } from "./middlewares/validateSchema";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 // Verifica se o usuário logado é ADMIN
 import { isAdmin } from "./middlewares/isAdmin";
-// Verifica se o usuário logado é da equipe (STAFF ou ADMIN)
-import { isStaff } from "./middlewares/isStaff";
+// Verifica se o perfil do usuário logado está entre os permitidos (ex: hasRole(["COZINHA", "ADMIN"]))
+import { hasRole } from "./middlewares/hasRole";
 
 // ----- Schemas (regras de validação) -----
-import { createUserSchema, authUserSchema } from "./schemas/userSchema";
+import { createUserSchema, authUserSchema, createFuncionarioSchema } from "./schemas/userSchema";
 import { createLancheSchema, updateLancheSchema } from "./schemas/lancheSchema";
-import { createPedidoSchema, updateStatusPedidoSchema } from "./schemas/pedidoSchema";
+import {
+  createPedidoSchema,
+  createPedidoMesaSchema,
+  updateStatusPedidoSchema,
+} from "./schemas/pedidoSchema";
 
 // ----- Controllers de usuário -----
 import { CreateUserController } from "./controllers/user/CreateUserController";
 import { AuthUserController } from "./controllers/user/AuthUserController";
 import { DetailUserController } from "./controllers/user/DetailUserController";
+import {
+  CreateFuncionarioController,
+  ListFuncionariosController,
+} from "./controllers/user/FuncionarioControllers";
 
 // ----- Controllers de lanche -----
 import { CreateLancheController } from "./controllers/lanche/CreateLancheController";
@@ -29,6 +37,7 @@ import { UpdateLancheController } from "./controllers/lanche/UpdateLancheControl
 // ----- Controllers de pedido -----
 import {
   CreatePedidoController,
+  CreatePedidoMesaController,
   ListMyPedidosController,
   ListPedidosController,
   DetailPedidoController,
@@ -56,6 +65,19 @@ router.post(
 
 // Detalhes do usuário logado: precisa estar autenticado
 router.get("/me", isAuthenticated, new DetailUserController().handle);
+
+// ===== ROTAS DE FUNCIONÁRIO (somente ADMIN) =====
+// Criar conta da equipe: garçom (STAFF) ou COZINHA
+router.post(
+  "/funcionarios",
+  isAuthenticated,
+  isAdmin,
+  validateSchema(createFuncionarioSchema),
+  new CreateFuncionarioController().handle
+);
+
+// Listar os funcionários
+router.get("/funcionarios", isAuthenticated, isAdmin, new ListFuncionariosController().handle);
 
 // ===== ROTAS DE LANCHE =====
 // Cadastro de lanche: precisa estar logado, ser ADMIN e enviar dados válidos
@@ -88,21 +110,35 @@ router.post(
   new CreatePedidoController().handle
 );
 
+// Pedido feito NA MESA: o garçom (STAFF) ou o ADMIN lança pelo salão
+router.post(
+  "/pedidos/mesa",
+  isAuthenticated,
+  hasRole(["STAFF", "ADMIN"]),
+  validateSchema(createPedidoMesaSchema),
+  new CreatePedidoMesaController().handle
+);
+
 // Pedidos do usuário logado
 // (precisa vir ANTES de "/pedidos/:id", senão o "me" seria lido como um id)
 router.get("/pedidos/me", isAuthenticated, new ListMyPedidosController().handle);
 
-// Todos os pedidos (painel da cozinha): somente a equipe
-router.get("/pedidos", isAuthenticated, isStaff, new ListPedidosController().handle);
+// Pedidos da equipe: COZINHA e ADMIN veem todos; o garçom (STAFF) vê só os que ele lançou
+router.get(
+  "/pedidos",
+  isAuthenticated,
+  hasRole(["STAFF", "COZINHA", "ADMIN"]),
+  new ListPedidosController().handle
+);
 
-// Detalhes de um pedido: o dono ou a equipe
+// Detalhes de um pedido: o dono, a COZINHA ou o ADMIN
 router.get("/pedidos/:id", isAuthenticated, new DetailPedidoController().handle);
 
-// Alterar o status do pedido: somente a equipe
+// Alterar o status do pedido: COZINHA e ADMIN em qualquer pedido; o garçom só nos dele
 router.patch(
   "/pedidos/:id/status",
   isAuthenticated,
-  isStaff,
+  hasRole(["STAFF", "COZINHA", "ADMIN"]),
   validateSchema(updateStatusPedidoSchema),
   new UpdateStatusPedidoController().handle
 );

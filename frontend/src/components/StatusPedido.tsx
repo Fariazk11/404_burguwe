@@ -12,7 +12,7 @@ export function StatusTimeline({ pedido }: { pedido: Pedido }) {
     return <p className="alert alert-error">Este pedido foi cancelado.</p>;
   }
 
-  // Pedidos de retirada não passam por "Saiu para entrega"
+  // Pedidos de retirada e de mesa não passam por "Saiu para entrega"
   const etapas: StatusPedido[] =
     pedido.tipoEntrega === "ENTREGA"
       ? ["PENDENTE", "EM_PREPARO", "PRONTO", "SAIU_PARA_ENTREGA", "ENTREGUE"]
@@ -20,10 +20,12 @@ export function StatusTimeline({ pedido }: { pedido: Pedido }) {
 
   const atual = etapas.indexOf(pedido.status);
 
-  // Textos específicos para retirada
+  // Textos específicos para retirada e mesa
   const label = (s: StatusPedido) => {
     if (pedido.tipoEntrega === "RETIRADA" && s === "PRONTO") return "Pronto para retirar";
     if (pedido.tipoEntrega === "RETIRADA" && s === "ENTREGUE") return "Retirado";
+    if (pedido.tipoEntrega === "MESA" && s === "PRONTO") return "Pronto para servir";
+    if (pedido.tipoEntrega === "MESA" && s === "ENTREGUE") return "Servido na mesa";
     if (s === "PENDENTE") return "Pedido recebido";
     return STATUS_LABEL[s];
   };

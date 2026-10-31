@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { api, getErrorMessage } from "../services/api";
-import { PAGAMENTO_LABEL, Pedido, StatusPedido, STATUS_LABEL, formatDate, formatPrice } from "../types";
+import {
+  PAGAMENTO_LABEL,
+  Pedido,
+  StatusPedido,
+  STATUS_LABEL,
+  destinoPedido,
+  formatDate,
+  formatPrice,
+} from "../types";
 import { StatusBadge } from "../components/StatusPedido";
 
 // Colunas do quadro da cozinha (pedidos em andamento)
@@ -14,9 +22,9 @@ function proximaAcao(pedido: Pedido): { label: string; status: StatusPedido } | 
     case "EM_PREPARO":
       return { label: "Marcar como pronto", status: "PRONTO" };
     case "PRONTO":
-      return pedido.tipoEntrega === "ENTREGA"
-        ? { label: "Saiu para entrega", status: "SAIU_PARA_ENTREGA" }
-        : { label: "Cliente retirou", status: "ENTREGUE" };
+      if (pedido.tipoEntrega === "ENTREGA") return { label: "Saiu para entrega", status: "SAIU_PARA_ENTREGA" };
+      if (pedido.tipoEntrega === "MESA") return { label: "Servido na mesa", status: "ENTREGUE" };
+      return { label: "Cliente retirou", status: "ENTREGUE" };
     case "SAIU_PARA_ENTREGA":
       return { label: "Confirmar entrega", status: "ENTREGUE" };
     default:
@@ -86,12 +94,24 @@ export function Painel() {
           <strong>#{pedido.numero}</strong>
           <span className="muted small">{formatDate(pedido.createdAt)}</span>
         </div>
-        <p className="small">
-          <strong>{pedido.user.name}</strong> • {pedido.telefone}
-        </p>
-        <p className="small">
-          {pedido.tipoEntrega === "ENTREGA" ? `🛵 ${pedido.endereco}` : "🏪 Retirada no balcão"}
-        </p>
+        {pedido.tipoEntrega === "MESA" ? (
+          <>
+            <p className="mesa-tag">🍽️ MESA {pedido.mesa}</p>
+            <p className="small">
+              {pedido.nomeCliente && <strong>{pedido.nomeCliente} • </strong>}
+              <span className="muted">lançado por {pedido.user.name}</span>
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="small">
+              <strong>{pedido.user.name}</strong> • {pedido.telefone}
+            </p>
+            <p className="small">
+              {pedido.tipoEntrega === "ENTREGA" ? `🛵 ${pedido.endereco}` : "🏪 Retirada no balcão"}
+            </p>
+          </>
+        )}
 
         <ul className="kitchen-items">
           {pedido.itens.map((item) => (
@@ -190,7 +210,10 @@ export function Painel() {
             <div key={pedido.id} className="card order-row">
               <div>
                 <strong>
-                  #{pedido.numero} — {pedido.user.name}
+                  #{pedido.numero} —{" "}
+                  {pedido.tipoEntrega === "MESA"
+                    ? `${destinoPedido(pedido)}${pedido.nomeCliente ? ` (${pedido.nomeCliente})` : ""}`
+                    : pedido.user.name}
                 </strong>
                 <p className="muted small">{formatDate(pedido.createdAt)}</p>
                 <p className="small">

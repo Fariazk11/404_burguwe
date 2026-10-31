@@ -2,7 +2,7 @@ import { SubmitEvent, useEffect, useState } from "react";
 import { api, getErrorMessage } from "../services/api";
 import { formatDate } from "../types";
 
-type PerfilEquipe = "STAFF" | "COZINHA";
+type PerfilEquipe = "STAFF" | "COZINHA" | "ENTREGADOR";
 
 // Funcionário como o backend devolve em GET /funcionarios
 interface Funcionario {
@@ -18,6 +18,7 @@ interface Funcionario {
 const PERFIS: { value: PerfilEquipe; label: string; descricao: string }[] = [
   { value: "STAFF", label: "🍽️ Garçom", descricao: "Lança pedidos de mesa; só vê os dele" },
   { value: "COZINHA", label: "🔥 Cozinha", descricao: "Vê todos os pedidos no painel" },
+  { value: "ENTREGADOR", label: "🛵 Entregador", descricao: "Aceita e finaliza entregas com código" },
 ];
 
 // Tela do ADMIN: cria e lista as contas da equipe
@@ -54,7 +55,7 @@ export function Funcionarios() {
     try {
       await api.post("/funcionarios", { name, email, password, role });
       setSucesso(
-        `Conta de ${role === "COZINHA" ? "cozinha" : "garçom"} criada! ${name} já pode entrar com ${email} e a senha informada.`
+        `Conta de ${role === "COZINHA" ? "cozinha" : role === "ENTREGADOR" ? "entregador" : "garçom"} criada! ${name} já pode entrar com ${email} e a senha informada.`
       );
       setName("");
       setEmail("");
@@ -138,7 +139,7 @@ export function Funcionarios() {
           {sucesso && <p className="alert alert-success">✓ {sucesso}</p>}
 
           <button type="submit" disabled={sending}>
-            {sending ? "Criando..." : role === "COZINHA" ? "Criar conta da cozinha" : "Criar conta de garçom"}
+            {sending ? "Criando..." : role === "COZINHA" ? "Criar conta da cozinha" : role === "ENTREGADOR" ? "Criar conta de entregador" : "Criar conta de garçom"}
           </button>
         </form>
 
@@ -156,7 +157,12 @@ export function Funcionarios() {
                 <p className="muted small">Conta criada em {formatDate(f.createdAt)}</p>
               </div>
               <div className="order-row-right">
-                {f.role === "COZINHA" ? (
+                {f.role === "ENTREGADOR" ? (
+                  <>
+                    <span className="role-tag role-entregador">Entregador</span>
+                    <span className="muted small">aceita e finaliza entregas</span>
+                  </>
+                ) : f.role === "COZINHA" ? (
                   <>
                     <span className="role-tag role-cozinha">Cozinha</span>
                     <span className="muted small">vê todos os pedidos</span>

@@ -18,6 +18,7 @@ import { Mesas } from "./pages/Mesas";
 import { Funcionarios } from "./pages/Funcionarios";
 import { Usuarios } from "./pages/Usuarios";
 import { MinhaConta } from "./pages/MinhaConta";
+import { Entregas } from "./pages/Entregas";
 import { AdminLanches } from "./pages/AdminLanches";
 import { LancheForm } from "./pages/LancheForm";
 import "./styles/global.css";
@@ -58,6 +59,11 @@ createRoot(document.getElementById("root")!).render(
               {/* Painel da cozinha: perfil COZINHA e ADMIN (veem os pedidos de todos) */}
               <Route element={<PrivateRoute roles={["COZINHA", "ADMIN"]} />}>
                 <Route path="/painel" element={<Painel />} />
+              </Route>
+
+              {/* Entregador: aceitar, finalizar (com código) e cancelar (com motivo) entregas */}
+              <Route element={<PrivateRoute roles={["ENTREGADOR"]} />}>
+                <Route path="/entregas" element={<Entregas />} />
               </Route>
 
               {/* Rotas somente ADMIN */}

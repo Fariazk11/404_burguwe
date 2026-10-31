@@ -21,11 +21,11 @@ export const createUserSchema = z.object({
 });
 
 // Schema de validação para o ADMIN criar uma conta da equipe (rota POST /funcionarios)
-// Mesmos campos do cadastro + o perfil: STAFF (garçom) ou COZINHA
+// Mesmos campos do cadastro + o perfil: STAFF (garçom), COZINHA ou ENTREGADOR
 export const createFuncionarioSchema = z.object({
   body: createUserSchema.shape.body.extend({
     role: z
-      .enum(["STAFF", "COZINHA"], { message: "O perfil deve ser STAFF (garçom) ou COZINHA" })
+      .enum(["STAFF", "COZINHA", "ENTREGADOR"], { message: "O perfil deve ser STAFF (garçom), COZINHA ou ENTREGADOR" })
       .optional(),
   }),
 });

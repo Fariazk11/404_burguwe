@@ -3,7 +3,7 @@ import prismaClient from "../../prisma";
 // hash: criptografa a senha nova | compare: confere a senha atual
 import { compare, hash } from "bcryptjs";
 
-type Role = "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
+type Role = "CLIENTE" | "STAFF" | "COZINHA" | "ENTREGADOR" | "ADMIN";
 
 // Campos do usuário que a API devolve (a senha NUNCA é devolvida)
 const usuarioSelect = {

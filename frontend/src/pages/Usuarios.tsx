@@ -19,6 +19,7 @@ const FILTROS: { value: Perfil | "TODOS"; label: string }[] = [
   { value: "CLIENTE", label: "Clientes" },
   { value: "STAFF", label: "Garçons" },
   { value: "COZINHA", label: "Cozinha" },
+  { value: "ENTREGADOR", label: "Entregadores" },
   { value: "ADMIN", label: "Admins" },
 ];
 

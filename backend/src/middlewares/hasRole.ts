@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 // Importa a conexão com o banco de dados
 import prismaClient from "../prisma";
 
-type Role = "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
+type Role = "CLIENTE" | "STAFF" | "COZINHA" | "ENTREGADOR" | "ADMIN";
 
 // Cria um middleware que só deixa passar os perfis informados.
 // Exemplo: hasRole(["COZINHA", "ADMIN"])
@@ -12,6 +12,7 @@ type Role = "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
 // Perfis da equipe:
 // - STAFF (garçom): lança pedidos de mesa e só vê os que ele mesmo lançou
 // - COZINHA: vê todos os pedidos no painel e atualiza o andamento
+// - ENTREGADOR: aceita, finaliza (com código) e cancela (com motivo) entregas
 // - ADMIN: pode tudo
 export function hasRole(roles: Role[]) {
   return async (req: Request, res: Response, next: NextFunction) => {

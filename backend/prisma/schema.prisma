@@ -16,6 +16,7 @@ enum Role {
   CLIENTE // cliente que faz pedidos (padrão para quem se cadastra no site)
   STAFF // funcionário do salão (garçom): lança pedidos de mesa e só vê os que ele lançou
   COZINHA // cozinha: vê TODOS os pedidos no painel e atualiza o andamento
+  ENTREGADOR // entregador: aceita entregas prontas, finaliza com o código do cliente ou cancela com motivo
   ADMIN // administrador (também gerencia o cardápio)
 }
 
@@ -53,7 +54,8 @@ model User {
   createdAt DateTime @default(now()) // data de criação (preenchida automaticamente)
   updatedAt DateTime @updatedAt // data da última atualização (automática)
 
-  pedidos Pedido[] // pedidos feitos por este usuário
+  pedidos  Pedido[] @relation("PedidosDoCliente") // pedidos feitos por este usuário
+  entregas Pedido[] @relation("EntregasDoEntregador") // entregas aceitas (perfil ENTREGADOR)
 
   @@map("users") // nome da tabela no banco
 }
@@ -96,9 +98,18 @@ model Pedido {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
+  // ----- Entrega (só quando tipoEntrega = ENTREGA) -----
+  codigoEntrega      String? // código de 4 dígitos que o cliente informa ao entregador (novo a cada pedido)
+  tentativasCodigo   Int     @default(0) // códigos errados digitados pelo entregador (bloqueia em 5)
+  motivoCancelamento String? // motivo informado pelo entregador ao cancelar a entrega
+
   // Quem fez o pedido
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation("PedidosDoCliente", fields: [userId], references: [id])
+
+  // Entregador que aceitou a entrega (vazio enquanto ninguém aceitou)
+  entregadorId String?
+  entregador   User?   @relation("EntregasDoEntregador", fields: [entregadorId], references: [id])
 
   itens ItemPedido[]
 

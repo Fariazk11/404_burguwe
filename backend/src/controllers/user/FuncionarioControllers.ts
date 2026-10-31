@@ -4,7 +4,7 @@ import { CreateUserService } from "../../services/user/CreateUserService";
 import { ListFuncionariosService } from "../../services/user/ListFuncionariosService";
 
 // Rota POST /funcionarios: o ADMIN cria uma conta da equipe
-// role: "STAFF" (garçom, padrão) ou "COZINHA"
+// role: "STAFF" (garçom, padrão), "COZINHA" ou "ENTREGADOR"
 class CreateFuncionarioController {
   async handle(req: Request, res: Response) {
     const { name, email, password, role } = req.body;
@@ -13,7 +13,7 @@ class CreateFuncionarioController {
       name,
       email,
       password,
-      role: role === "COZINHA" ? "COZINHA" : "STAFF",
+      role: role === "COZINHA" || role === "ENTREGADOR" ? role : "STAFF",
     });
 
     return res.status(201).json(funcionario);

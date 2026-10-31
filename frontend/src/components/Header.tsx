@@ -9,6 +9,7 @@ import { LOGO_SVG } from "../types";
 // - visitante/CLIENTE: cardápio, meus pedidos e carrinho
 // - STAFF (garçom): só a tela de mesas (ele só vê os pedidos que lançou)
 // - COZINHA: só o painel da cozinha (vê os pedidos de todos)
+// - ENTREGADOR: só a tela de entregas
 // - ADMIN: tudo
 export function Header() {
   const { user, signOut } = useAuth();
@@ -16,12 +17,13 @@ export function Header() {
 
   const isGarcom = user?.role === "STAFF";
   const isCozinha = user?.role === "COZINHA";
+  const isEntregador = user?.role === "ENTREGADOR";
   const isAdmin = user?.role === "ADMIN";
-  // Equipe (garçom ou cozinha) não usa a loja do site
-  const isEquipe = isGarcom || isCozinha;
+  // Equipe (garçom, cozinha ou entregador) não usa a loja do site
+  const isEquipe = isGarcom || isCozinha || isEntregador;
 
   // Para onde a logo leva: a tela principal de cada perfil
-  const inicio = isGarcom ? "/mesas" : isCozinha ? "/painel" : "/";
+  const inicio = isGarcom ? "/mesas" : isCozinha ? "/painel" : isEntregador ? "/entregas" : "/";
 
   return (
     <header className="header">
@@ -37,6 +39,7 @@ export function Header() {
         <nav>
           {isGarcom && <NavLink to="/mesas">Minhas mesas</NavLink>}
           {isCozinha && <NavLink to="/painel">Cozinha</NavLink>}
+          {isEntregador && <NavLink to="/entregas">Entregas</NavLink>}
           {!isEquipe && (
             <>
               <NavLink to="/" end>
@@ -69,6 +72,7 @@ export function Header() {
             <div className="user-info">
               {isGarcom && <span className="role-tag">Garçom</span>}
               {isCozinha && <span className="role-tag role-cozinha">Cozinha</span>}
+              {isEntregador && <span className="role-tag role-entregador">Entregador</span>}
               {/* Clicar no nome abre "Minha conta" (trocar nome e senha) */}
               <Link to="/conta" className="user-name" title="Minha conta">
                 &gt; {user.name.split(" ")[0]}_

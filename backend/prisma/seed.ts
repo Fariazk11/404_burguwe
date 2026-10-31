@@ -73,6 +73,22 @@ async function main() {
     });
     console.log(`Cozinha criada: ${emailCozinha} / ${senhaLog("cozinha123")}`);
   }
+
+  // Cria um ENTREGADOR de exemplo: aceita, finaliza (com código) e cancela (com motivo) entregas
+  const emailEntregador = "entregador@lanchonete.com";
+  const entregadorExiste = await prismaClient.user.findFirst({ where: { email: emailEntregador } });
+
+  if (!entregadorExiste) {
+    await prismaClient.user.create({
+      data: {
+        name: "Entregador Exemplo",
+        email: emailEntregador,
+        password: await hash(senha("entrega123"), 8),
+        role: "ENTREGADOR",
+      },
+    });
+    console.log(`Entregador criado: ${emailEntregador} / ${senhaLog("entrega123")}`);
+  }
 }
 
 main()

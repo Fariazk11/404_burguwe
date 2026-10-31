@@ -1,7 +1,7 @@
 // Importa a conexão com o banco de dados
 import prismaClient from "../../prisma";
 // Importa os dados relacionados que voltam junto com o pedido
-import { pedidoInclude } from "./pedidoInclude";
+import { pedidoInclude, pedidoOmitEquipe } from "./pedidoInclude";
 // Monta os itens com o preço do banco e calcula o subtotal
 import { ItemProps, montarItensPedido } from "./montarItensPedido";
 
@@ -57,6 +57,7 @@ class CreatePedidoMesaService {
         },
       },
       include: pedidoInclude,
+      omit: pedidoOmitEquipe,
     });
 
     return pedido;

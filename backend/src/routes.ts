@@ -41,6 +41,14 @@ import {
   UpdateMeController,
   ChangeSenhaController,
 } from "./controllers/user/UsuarioControllers";
+import {
+  ListEntregasDisponiveisController,
+  ListMinhasEntregasController,
+  AceitarEntregaController,
+  FinalizarEntregaController,
+  CancelarEntregaController,
+} from "./controllers/entrega/EntregaControllers";
+import { finalizarEntregaSchema, cancelarEntregaSchema } from "./schemas/entregaSchema";
 
 // ----- Controllers de lanche -----
 import { CreateLancheController } from "./controllers/lanche/CreateLancheController";
@@ -188,6 +196,49 @@ router.patch(
   hasRole(["STAFF", "COZINHA", "ADMIN"]),
   validateSchema(updateStatusPedidoSchema),
   new UpdateStatusPedidoController().handle
+);
+
+// ===== ROTAS DE ENTREGA (somente ENTREGADOR) =====
+// Entregas prontas esperando um entregador
+router.get(
+  "/entregas/disponiveis",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  new ListEntregasDisponiveisController().handle
+);
+
+// Entregas que o entregador logado aceitou (em andamento e histórico)
+router.get(
+  "/entregas/minhas",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  new ListMinhasEntregasController().handle
+);
+
+// Aceitar uma entrega (o pedido passa para "Saiu para entrega")
+router.patch(
+  "/entregas/:id/aceitar",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  new AceitarEntregaController().handle
+);
+
+// Finalizar com o código de 4 dígitos que o cliente vê na página do pedido
+router.patch(
+  "/entregas/:id/finalizar",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  validateSchema(finalizarEntregaSchema),
+  new FinalizarEntregaController().handle
+);
+
+// Cancelar a entrega: o motivo é obrigatório
+router.patch(
+  "/entregas/:id/cancelar",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  validateSchema(cancelarEntregaSchema),
+  new CancelarEntregaController().handle
 );
 
 // O cliente cancela o próprio pedido (enquanto estiver PENDENTE)

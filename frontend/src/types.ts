@@ -44,6 +44,10 @@ export interface Pedido {
   telefone: string | null; // vazio nos pedidos de MESA
   mesa: number | null; // número da mesa (só em pedidos de MESA)
   nomeCliente: string | null; // nome de quem está na mesa (opcional)
+  // Entrega: o código só vem para o CLIENTE dono do pedido (a equipe nunca recebe)
+  codigoEntrega?: string | null;
+  entregador?: { id: string; name: string } | null; // quem aceitou a entrega
+  motivoCancelamento?: string | null; // motivo informado pelo entregador ao cancelar
   formaPagamento: FormaPagamento;
   trocoPara: number | null;
   observacao: string | null;
@@ -75,12 +79,13 @@ export const PAGAMENTO_LABEL: Record<FormaPagamento, string> = {
 };
 
 // Perfis de usuário e seus nomes amigáveis
-export type Perfil = "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
+export type Perfil = "CLIENTE" | "STAFF" | "COZINHA" | "ENTREGADOR" | "ADMIN";
 
 export const PERFIL_LABEL: Record<Perfil, string> = {
   CLIENTE: "Cliente",
   STAFF: "Garçom",
   COZINHA: "Cozinha",
+  ENTREGADOR: "Entregador",
   ADMIN: "Admin",
 };
 

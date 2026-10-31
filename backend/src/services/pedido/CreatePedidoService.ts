@@ -1,7 +1,7 @@
 // Importa a conexão com o banco de dados
 import prismaClient from "../../prisma";
 // Importa os dados relacionados e a taxa de entrega
-import { pedidoInclude, TAXA_ENTREGA } from "./pedidoInclude";
+import { gerarCodigoEntrega, pedidoInclude, TAXA_ENTREGA } from "./pedidoInclude";
 // Monta os itens com o preço do banco e calcula o subtotal
 import { ItemProps, montarItensPedido } from "./montarItensPedido";
 
@@ -53,6 +53,8 @@ class CreatePedidoService {
         subtotal: subtotal,
         taxaEntrega: taxaEntrega,
         total: total,
+        // Pedido de ENTREGA ganha um código novo, que o cliente informa ao entregador
+        codigoEntrega: tipoEntrega === "ENTREGA" ? gerarCodigoEntrega() : null,
         itens: {
           create: itensPedido,
         },

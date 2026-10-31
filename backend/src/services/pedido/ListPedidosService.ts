@@ -2,7 +2,7 @@
 import prismaClient from "../../prisma";
 // Importa o enum de status gerado pelo Prisma
 import { StatusPedido } from "../../generated/prisma/client";
-import { pedidoInclude } from "./pedidoInclude";
+import { pedidoInclude, pedidoOmitEquipe } from "./pedidoInclude";
 
 // Lista os pedidos da equipe, com filtro opcional por status
 // - ADMIN e COZINHA: veem TODOS os pedidos (painel da cozinha)
@@ -20,6 +20,8 @@ class ListPedidosService {
     const pedidos = await prismaClient.pedido.findMany({
       where: { status: filtro, ...somenteDoFuncionario },
       include: pedidoInclude,
+      // A equipe nunca recebe o código de entrega do cliente
+      omit: pedidoOmitEquipe,
       // Mais antigos primeiro: a cozinha atende por ordem de chegada
       orderBy: { createdAt: "asc" },
     });

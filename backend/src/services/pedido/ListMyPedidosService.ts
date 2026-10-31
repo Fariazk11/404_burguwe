@@ -10,6 +10,8 @@ class ListMyPedidosService {
       // por isso não aparecem aqui (a equipe vê esses pedidos na tela de Mesas/Cozinha)
       where: { userId: user_id, tipoEntrega: { not: "MESA" } },
       include: pedidoInclude,
+      // O cliente vê o próprio código de entrega; só o contador de tentativas fica de fora
+      omit: { tentativasCodigo: true },
       // Mais recentes primeiro
       orderBy: { createdAt: "desc" },
     });

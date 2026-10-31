@@ -70,6 +70,33 @@ export function PedidoDetalhe() {
         <StatusBadge status={pedido.status} />
       </div>
 
+      {/* Código de entrega: só o cliente recebe; ele informa ao entregador na hora da entrega */}
+      {pedido.tipoEntrega === "ENTREGA" &&
+        pedido.codigoEntrega &&
+        pedido.status !== "ENTREGUE" &&
+        pedido.status !== "CANCELADO" && (
+          <section className="card codigo-entrega">
+            <div>
+              <span className="comanda-label">Código de entrega</span>
+              <strong className="codigo-valor">{pedido.codigoEntrega}</strong>
+            </div>
+            <p className="muted">
+              Informe este código ao entregador <strong>somente quando receber o pedido</strong>. Sem ele a
+              entrega não é finalizada.
+              {pedido.entregador && (
+                <>
+                  <br />
+                  🛵 Seu pedido está com <strong>{pedido.entregador.name}</strong>.
+                </>
+              )}
+            </p>
+          </section>
+        )}
+
+      {pedido.status === "CANCELADO" && pedido.motivoCancelamento && (
+        <p className="alert alert-error">Motivo do cancelamento: {pedido.motivoCancelamento}</p>
+      )}
+
       <section className="card">
         <StatusTimeline pedido={pedido} />
       </section>

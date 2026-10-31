@@ -14,16 +14,21 @@ class DetailPedidoService {
       throw new Error("Pedido não encontrado");
     }
 
-    // Só o dono do pedido (cliente, ou o garçom que lançou a mesa), a COZINHA ou o ADMIN pode ver
-    if (pedido.userId !== user_id) {
-      const user = await prismaClient.user.findFirst({ where: { id: user_id } });
-
-      if (!user || (user.role !== "ADMIN" && user.role !== "COZINHA")) {
-        throw new Error("Pedido não encontrado");
-      }
+    // O dono do pedido vê tudo, inclusive o CÓDIGO DE ENTREGA (que ele informa ao entregador)
+    if (pedido.userId === user_id) {
+      const { tentativasCodigo, ...paraODono } = pedido;
+      return paraODono;
     }
 
-    return pedido;
+    // Fora o dono, só a COZINHA e o ADMIN podem ver o pedido — e SEM o código de entrega
+    const user = await prismaClient.user.findFirst({ where: { id: user_id } });
+
+    if (!user || (user.role !== "ADMIN" && user.role !== "COZINHA")) {
+      throw new Error("Pedido não encontrado");
+    }
+
+    const { codigoEntrega, tentativasCodigo, ...paraAEquipe } = pedido;
+    return paraAEquipe;
   }
 }
 

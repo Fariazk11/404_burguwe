@@ -8,8 +8,8 @@ interface CreateUserProps {
   name: string;
   email: string;
   password: string;
-  // Perfil da conta: o cadastro do site cria CLIENTE; o ADMIN cria STAFF (garçom) ou COZINHA
-  role?: "CLIENTE" | "STAFF" | "COZINHA";
+  // Perfil da conta: o cadastro do site cria CLIENTE; o ADMIN cria STAFF (garçom), COZINHA ou ENTREGADOR
+  role?: "CLIENTE" | "STAFF" | "COZINHA" | "ENTREGADOR";
 }
 
 // Classe responsável pela REGRA DE NEGÓCIO de cadastrar um usuário

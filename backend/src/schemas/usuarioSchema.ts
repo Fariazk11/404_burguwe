@@ -11,8 +11,8 @@ const senhaSchema = z
 // PATCH /usuarios/:id/perfil — muda o perfil de uma conta
 export const updatePerfilSchema = z.object({
   body: z.object({
-    role: z.enum(["CLIENTE", "STAFF", "COZINHA", "ADMIN"], {
-      message: "Perfil inválido (use CLIENTE, STAFF, COZINHA ou ADMIN)",
+    role: z.enum(["CLIENTE", "STAFF", "COZINHA", "ENTREGADOR", "ADMIN"], {
+      message: "Perfil inválido (use CLIENTE, STAFF, COZINHA, ENTREGADOR ou ADMIN)",
     }),
   }),
 });

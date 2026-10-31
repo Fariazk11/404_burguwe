@@ -574,6 +574,31 @@ a.order-row:hover { background: rgba(42, 10, 74, 0.95); text-shadow: none; box-s
 .role-tag.role-cozinha { color: #ff9a3c; border-color: #ff9a3c; }
 .role-tag.role-cliente { color: var(--cyan); border-color: var(--cyan); }
 .role-tag.role-admin { color: var(--primary); border-color: var(--primary); }
+.role-tag.role-entregador { color: var(--green); border-color: var(--green); }
+
+/* ===== Entregas (tela do entregador) ===== */
+.entregas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; align-items: start; }
+.entrega-andamento { border-color: var(--green); }
+.entrega-endereco { font-size: 1.05rem; font-weight: 700; color: #fff; }
+.entrega-cobrar { font-size: 0.95rem; }
+.entrega-status { color: var(--cyan); font-family: var(--font-mono); }
+.entrega-form { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.25rem; }
+.entrega-botoes { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; }
+.entrega-botoes > * { flex: 1; }
+.codigo-input {
+  font-family: var(--font-mono); font-size: 1.8rem; letter-spacing: 0.6em; text-align: center;
+  padding-left: 0.6em; /* compensa o letter-spacing do último dígito */
+}
+
+/* ===== Código de entrega (tela do cliente) ===== */
+.codigo-entrega { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; border-color: var(--primary); }
+.codigo-entrega > div { display: flex; flex-direction: column; }
+.codigo-entrega p { flex: 1; min-width: 220px; }
+.codigo-valor {
+  font-family: var(--font-mono); font-size: 2.6rem; letter-spacing: 0.35em; color: var(--primary);
+  text-shadow: 0 0 14px rgba(252, 238, 10, 0.55);
+}
+.codigo-mini { font-family: var(--font-mono); font-size: 0.85rem; color: var(--primary); border: 1px solid var(--primary); padding: 0.05rem 0.45rem; }
 
 /* ===== Usuários (tela do admin) ===== */
 .usuario-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }

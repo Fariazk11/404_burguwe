@@ -1,12 +1,12 @@
 // Importa a conexão com o banco de dados
 import prismaClient from "../../prisma";
 
-// Lista as contas da equipe (garçons STAFF e COZINHA) para a tela do ADMIN,
+// Lista as contas da equipe (garçons STAFF, COZINHA e ENTREGADOR) para a tela do ADMIN,
 // junto com quantos pedidos de mesa cada um já lançou (só garçons lançam)
 class ListFuncionariosService {
   async execute() {
     const funcionarios = await prismaClient.user.findMany({
-      where: { role: { in: ["STAFF", "COZINHA"] } },
+      where: { role: { in: ["STAFF", "COZINHA", "ENTREGADOR"] } },
       // A senha NUNCA é devolvida
       select: {
         id: true,

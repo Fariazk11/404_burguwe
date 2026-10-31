@@ -36,6 +36,9 @@ export function Home() {
   if (user?.role === "COZINHA") {
     return <Navigate to="/painel" replace />;
   }
+  if (user?.role === "ENTREGADOR") {
+    return <Navigate to="/entregas" replace />;
+  }
 
   // Quantas unidades deste lanche já estão no carrinho
   const qtdNoCarrinho = (id: string) =>

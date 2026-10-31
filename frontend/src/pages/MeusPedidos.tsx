@@ -51,6 +51,10 @@ export function MeusPedidos() {
             <div className="order-row-right">
               <StatusBadge status={pedido.status} />
               <strong>{formatPrice(pedido.total)}</strong>
+              {/* Código de entrega à mão enquanto o pedido não chegou */}
+              {pedido.codigoEntrega && pedido.status !== "ENTREGUE" && pedido.status !== "CANCELADO" && (
+                <span className="codigo-mini">Código: {pedido.codigoEntrega}</span>
+              )}
             </div>
           </Link>
         ))}

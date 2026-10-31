@@ -22,11 +22,11 @@ function proximaAcao(pedido: Pedido): { label: string; status: StatusPedido } | 
     case "EM_PREPARO":
       return { label: "Marcar como pronto", status: "PRONTO" };
     case "PRONTO":
-      if (pedido.tipoEntrega === "ENTREGA") return { label: "Saiu para entrega", status: "SAIU_PARA_ENTREGA" };
+      // Entrega: quem leva é o entregador (ele aceita na tela Entregas)
+      if (pedido.tipoEntrega === "ENTREGA") return null;
       if (pedido.tipoEntrega === "MESA") return { label: "Servido na mesa", status: "ENTREGUE" };
       return { label: "Cliente retirou", status: "ENTREGUE" };
-    case "SAIU_PARA_ENTREGA":
-      return { label: "Confirmar entrega", status: "ENTREGUE" };
+    // "Saiu para entrega": o entregador finaliza com o código do cliente
     default:
       return null;
   }
@@ -124,6 +124,16 @@ export function Painel() {
 
         {pedido.observacao && <p className="small note">📝 {pedido.observacao}</p>}
 
+        {/* Situação da entrega (quem leva é o entregador) */}
+        {pedido.tipoEntrega === "ENTREGA" && pedido.status === "PRONTO" && (
+          <p className="small entrega-status">⏳ Aguardando um entregador aceitar</p>
+        )}
+        {pedido.status === "SAIU_PARA_ENTREGA" && (
+          <p className="small entrega-status">
+            🛵 Com <strong>{pedido.entregador?.name ?? "entregador"}</strong> • finaliza com o código do cliente
+          </p>
+        )}
+
         <p className="small">
           {formatPrice(pedido.total)} • {PAGAMENTO_LABEL[pedido.formaPagamento]}
           {pedido.trocoPara && ` (troco p/ ${formatPrice(pedido.trocoPara)})`}
@@ -219,6 +229,10 @@ export function Painel() {
                 <p className="small">
                   {pedido.itens.map((i) => `${i.quantidade}x ${i.lanche.nome}`).join(", ")}
                 </p>
+                {pedido.entregador && <p className="muted small">🛵 Entregador: {pedido.entregador.name}</p>}
+                {pedido.motivoCancelamento && (
+                  <p className="small note">Motivo do cancelamento: {pedido.motivoCancelamento}</p>
+                )}
               </div>
               <div className="order-row-right">
                 <StatusBadge status={pedido.status} />

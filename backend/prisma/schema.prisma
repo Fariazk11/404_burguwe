@@ -1,0 +1,118 @@
+// Gerador do cliente Prisma: cria o código TypeScript de acesso ao banco
+// dentro de src/generated/prisma (é de lá que importamos o PrismaClient)
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Banco de dados usado: PostgreSQL
+// (a URL de conexão fica no prisma.config.ts, que lê o DATABASE_URL do .env)
+datasource db {
+  provider = "postgresql"
+}
+
+// Perfis de acesso possíveis de um usuário
+enum Role {
+  CLIENTE // cliente que faz pedidos (padrão para quem se cadastra no site)
+  STAFF // funcionário (acompanha e atualiza os pedidos)
+  ADMIN // administrador (também gerencia o cardápio)
+}
+
+// Etapas pelas quais um pedido passa
+enum StatusPedido {
+  PENDENTE // recebido, aguardando a cozinha aceitar
+  EM_PREPARO // a cozinha está preparando
+  PRONTO // pronto para retirada / aguardando entregador
+  SAIU_PARA_ENTREGA // a caminho do cliente
+  ENTREGUE // finalizado
+  CANCELADO // cancelado pelo cliente ou pela lanchonete
+}
+
+// Como o cliente vai receber o pedido
+enum TipoEntrega {
+  ENTREGA // delivery no endereço informado
+  RETIRADA // o cliente busca no balcão
+}
+
+// Formas de pagamento aceitas (pagamento na entrega/retirada)
+enum FormaPagamento {
+  PIX
+  CARTAO
+  DINHEIRO
+}
+
+// Tabela de usuários
+model User {
+  id        String   @id @default(uuid()) // chave primária gerada automaticamente (UUID)
+  name      String // nome do usuário
+  email     String   @unique // e-mail único (não pode repetir)
+  password  String // senha criptografada com bcrypt
+  role      Role     @default(CLIENTE) // perfil; todo usuário novo começa como CLIENTE
+  createdAt DateTime @default(now()) // data de criação (preenchida automaticamente)
+  updatedAt DateTime @updatedAt // data da última atualização (automática)
+
+  pedidos Pedido[] // pedidos feitos por este usuário
+
+  @@map("users") // nome da tabela no banco
+}
+
+// Tabela de lanches do cardápio
+model Lanche {
+  id           String   @id @default(uuid()) // chave primária gerada automaticamente (UUID)
+  nome         String // Ex: "X-Bacon"
+  descricao    String // Ex: "Pão brioche, hambúrguer 180g, bacon e cheddar"
+  preco        Float // Ex: 29.90
+  ingredientes String // Ex: "pão, carne, bacon, cheddar, alface"
+  tamanho      String // Ex: "Médio"
+  calorias     Int // Ex: 850
+  imagem       String? // URL de uma foto do lanche (opcional)
+  disponivel   Boolean  @default(true) // se o lanche está à venda (padrão: sim)
+  createdAt    DateTime @default(now()) // data de criação (automática)
+  updatedAt    DateTime @updatedAt // data da última atualização (automática)
+
+  itens ItemPedido[] // itens de pedido em que este lanche aparece
+
+  @@map("lanches") // nome da tabela no banco
+}
+
+// Tabela de pedidos
+model Pedido {
+  id             String         @id @default(uuid())
+  numero         Int            @unique @default(autoincrement()) // número "amigável" do pedido (#1, #2...)
+  status         StatusPedido   @default(PENDENTE)
+  tipoEntrega    TipoEntrega
+  endereco       String? // obrigatório só quando tipoEntrega = ENTREGA
+  telefone       String
+  formaPagamento FormaPagamento
+  trocoPara      Float? // se pagar em dinheiro: para quanto precisa de troco
+  observacao     String?
+  subtotal       Float // soma dos itens
+  taxaEntrega    Float // 0 quando é retirada
+  total          Float // subtotal + taxaEntrega
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Quem fez o pedido
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  itens ItemPedido[]
+
+  @@map("pedidos")
+}
+
+// Cada lanche dentro de um pedido (com a quantidade e o preço da época)
+model ItemPedido {
+  id            String  @id @default(uuid())
+  quantidade    Int
+  precoUnitario Float // preço do lanche no momento do pedido (se o preço mudar depois, o pedido não muda)
+  observacao    String? // Ex: "sem cebola"
+
+  pedidoId String
+  pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  lancheId String
+  lanche   Lanche @relation(fields: [lancheId], references: [id])
+
+  @@map("itens_pedido")
+}

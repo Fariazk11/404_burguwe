@@ -611,6 +611,20 @@ a.order-row:hover { background: rgba(42, 10, 74, 0.95); text-shadow: none; box-s
 .status.resgate-PAGO { color: var(--ok); background: rgba(57, 255, 136, 0.08); }
 .status.resgate-CANCELADO { color: var(--danger); background: rgba(255, 42, 109, 0.1); }
 
+/* ===== Resgates (tela do admin) ===== */
+.stat-pendente { border-color: var(--primary); }
+.resgate-row { display: flex; flex-direction: column; gap: 0.75rem; }
+.resgate-row.resgate-pendente { box-shadow: inset 3px 0 0 var(--primary); }
+.resgate-topo { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.resgate-valor { font-family: var(--font-mono); font-size: 1.4rem; color: var(--primary); text-shadow: 0 0 10px rgba(252, 238, 10, 0.45); }
+.resgate-pix { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.resgate-pix .comanda-label { margin-bottom: 0; }
+.resgate-pix code {
+  font-family: var(--font-mono); font-size: 1rem; color: var(--green);
+  background: rgba(13, 2, 33, 0.85); border: 1px solid var(--border); padding: 0.3rem 0.6rem;
+  word-break: break-all;
+}
+
 /* ===== Código de entrega (tela do cliente) ===== */
 .codigo-entrega { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; border-color: var(--primary); }
 .codigo-entrega > div { display: flex; flex-direction: column; }

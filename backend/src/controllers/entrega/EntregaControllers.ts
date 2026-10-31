@@ -8,6 +8,11 @@ import {
   CancelarEntregaService,
 } from "../../services/entrega/EntregaServices";
 import { ResumoGanhosService, SolicitarResgateService } from "../../services/entrega/GanhosServices";
+import {
+  ListResgatesService,
+  PagarResgateService,
+  CancelarResgateService,
+} from "../../services/entrega/ResgateAdminServices";
 
 // GET /entregas/disponiveis — entregas prontas sem entregador
 class ListEntregasDisponiveisController {
@@ -64,7 +69,34 @@ class SolicitarResgateController {
   }
 }
 
+// ===== Tela "Resgates" do ADMIN =====
+
+// GET /resgates?status=SOLICITADO
+class ListResgatesController {
+  async handle(req: Request, res: Response) {
+    const status = typeof req.query.status === "string" ? req.query.status : undefined;
+    return res.json(await new ListResgatesService().execute(status));
+  }
+}
+
+// PATCH /resgates/:id/pagar — body: { observacao? }
+class PagarResgateController {
+  async handle(req: Request, res: Response) {
+    return res.json(await new PagarResgateService().execute(req.params.id as string, req.body.observacao));
+  }
+}
+
+// PATCH /resgates/:id/cancelar — body: { motivo }
+class CancelarResgateController {
+  async handle(req: Request, res: Response) {
+    return res.json(await new CancelarResgateService().execute(req.params.id as string, req.body.motivo));
+  }
+}
+
 export {
+  ListResgatesController,
+  PagarResgateController,
+  CancelarResgateController,
   ResumoGanhosController,
   SolicitarResgateController,
   ListEntregasDisponiveisController,

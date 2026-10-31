@@ -19,6 +19,7 @@ import { Funcionarios } from "./pages/Funcionarios";
 import { Usuarios } from "./pages/Usuarios";
 import { MinhaConta } from "./pages/MinhaConta";
 import { Entregas } from "./pages/Entregas";
+import { Resgates } from "./pages/Resgates";
 import { AdminLanches } from "./pages/AdminLanches";
 import { LancheForm } from "./pages/LancheForm";
 import "./styles/global.css";
@@ -69,6 +70,7 @@ createRoot(document.getElementById("root")!).render(
               {/* Rotas somente ADMIN */}
               <Route element={<PrivateRoute roles={["ADMIN"]} />}>
                 <Route path="/admin/usuarios" element={<Usuarios />} />
+                <Route path="/admin/resgates" element={<Resgates />} />
                 <Route path="/admin/funcionarios" element={<Funcionarios />} />
                 <Route path="/admin/lanches" element={<AdminLanches />} />
                 <Route path="/admin/lanches/novo" element={<LancheForm />} />

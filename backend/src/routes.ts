@@ -49,11 +49,16 @@ import {
   CancelarEntregaController,
   ResumoGanhosController,
   SolicitarResgateController,
+  ListResgatesController,
+  PagarResgateController,
+  CancelarResgateController,
 } from "./controllers/entrega/EntregaControllers";
 import {
   finalizarEntregaSchema,
   cancelarEntregaSchema,
   solicitarResgateSchema,
+  pagarResgateSchema,
+  cancelarResgateSchema,
 } from "./schemas/entregaSchema";
 
 // ----- Controllers de lanche -----
@@ -262,6 +267,28 @@ router.patch(
   hasRole(["ENTREGADOR"]),
   validateSchema(cancelarEntregaSchema),
   new CancelarEntregaController().handle
+);
+
+// ===== RESGATES DOS ENTREGADORES (somente ADMIN) =====
+// Listar (?status=SOLICITADO|PAGO|CANCELADO) com totais por status
+router.get("/resgates", isAuthenticated, isAdmin, new ListResgatesController().handle);
+
+// Marcar como pago (a loja enviou o dinheiro por fora)
+router.patch(
+  "/resgates/:id/pagar",
+  isAuthenticated,
+  isAdmin,
+  validateSchema(pagarResgateSchema),
+  new PagarResgateController().handle
+);
+
+// Cancelar o resgate (o valor volta para o saldo do entregador)
+router.patch(
+  "/resgates/:id/cancelar",
+  isAuthenticated,
+  isAdmin,
+  validateSchema(cancelarResgateSchema),
+  new CancelarResgateController().handle
 );
 
 // O cliente cancela o próprio pedido (enquanto estiver PENDENTE)

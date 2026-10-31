@@ -26,6 +26,24 @@ export const solicitarResgateSchema = z.object({
   }),
 });
 
+// PATCH /resgates/:id/pagar (ADMIN) — observação opcional (ex: id da transação Pix)
+export const pagarResgateSchema = z.object({
+  body: z.object({
+    observacao: z.string().trim().max(200, { message: "A observação deve ter no máximo 200 caracteres" }).optional(),
+  }),
+});
+
+// PATCH /resgates/:id/cancelar (ADMIN) — motivo obrigatório (o entregador vê)
+export const cancelarResgateSchema = z.object({
+  body: z.object({
+    motivo: z
+      .string({ message: "Informe o motivo do cancelamento" })
+      .trim()
+      .min(5, { message: "Descreva o motivo (mínimo 5 caracteres)" })
+      .max(200, { message: "O motivo deve ter no máximo 200 caracteres" }),
+  }),
+});
+
 // PATCH /entregas/:id/cancelar — o motivo é OBRIGATÓRIO (sem ele não cancela)
 export const cancelarEntregaSchema = z.object({
   body: z.object({

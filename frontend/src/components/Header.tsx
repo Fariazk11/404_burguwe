@@ -55,6 +55,7 @@ export function Header() {
               <NavLink to="/painel">Cozinha</NavLink>
               <NavLink to="/admin/lanches">Lanches</NavLink>
               <NavLink to="/admin/usuarios">Usuários</NavLink>
+              <NavLink to="/admin/resgates">Resgates</NavLink>
             </>
           )}
         </nav>

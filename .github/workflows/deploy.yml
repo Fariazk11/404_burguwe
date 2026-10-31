@@ -42,10 +42,10 @@ jobs:
       - name: Gerar o build
         run: npm run build
         env:
-          # Endereço do backend em produção. Configure em
-          # Settings → Secrets and variables → Actions → Variables → VITE_API_URL.
-          # Sem a variável, o site usa http://localhost:3333.
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          # Endereço do backend em produção (API no Render).
+          # Para trocar sem mexer aqui, crie a variável VITE_API_URL em
+          # Settings → Secrets and variables → Actions → Variables (ela tem prioridade).
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://burger404-api.onrender.com' }}
 
       # O GitHub Pages não conhece as rotas do React Router: ao abrir /404_burguwe/login
       # direto, ele procura o 404.html. Como ele é uma cópia do index.html, o React carrega

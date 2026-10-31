@@ -2,6 +2,7 @@ import { SubmitEvent, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getErrorMessage } from "../services/api";
+import { LOGO_SVG } from "../types";
 
 // Tela de cadastro de usuário (usa a rota POST /users e depois POST /session)
 export function Cadastro() {
@@ -41,7 +42,7 @@ export function Cadastro() {
   return (
     <div className="auth-page">
       <form className="card auth-card" onSubmit={handleSubmit}>
-        <img src="/img/logo-404-burger.svg" alt="404 Burger" className="auth-logo" />
+        <img src={LOGO_SVG} alt="404 Burger" className="auth-logo" />
         <h1>Criar conta</h1>
         <p className="muted mono">&gt; registre seu ID na rede para fazer seu pedido_</p>
 

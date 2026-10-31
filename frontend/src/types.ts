@@ -74,6 +74,14 @@ export const PAGAMENTO_LABEL: Record<FormaPagamento, string> = {
   DINHEIRO: "Dinheiro",
 };
 
+// Monta o caminho de um arquivo da pasta public respeitando o "base" do Vite.
+// Ex: asset("img/logo-404-burger.svg") -> "/404_burguwe/img/logo-404-burger.svg"
+export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
+// Caminhos da logo neon (pasta public/img)
+export const LOGO_SVG = asset("img/logo-404-burger.svg");
+export const LOGO_PNG = asset("img/logo-404-burger.png");
+
 // Formata um número como dinheiro: 29.9 -> "R$ 29,90"
 export const formatPrice = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });

@@ -3,7 +3,7 @@ import { api, getErrorMessage } from "../services/api";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
-import { Lanche, formatPrice } from "../types";
+import { LOGO_PNG, Lanche, formatPrice } from "../types";
 import { LancheImage } from "../components/LancheImage";
 
 // Filtros por tamanho (mesmos valores aceitos pelo backend)
@@ -69,7 +69,7 @@ export function Home() {
           </div>
         </div>
         {/* Logo neon da pasta public/img */}
-        <img src="/img/logo-404-burger.png" alt="404 Burger" className="hero-logo" />
+        <img src={LOGO_PNG} alt="404 Burger" className="hero-logo" />
       </section>
 
       <div className="menu-toolbar">

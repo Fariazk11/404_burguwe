@@ -22,7 +22,8 @@ import "./styles/global.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* basename: no GitHub Pages o site fica em /404_burguwe (igual ao "base" do vite.config.ts) */}
+    <BrowserRouter basename="/404_burguwe">
       <AuthProvider>
         <CartProvider>
           <Routes>

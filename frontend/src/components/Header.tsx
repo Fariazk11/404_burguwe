@@ -2,6 +2,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
+import { LOGO_SVG } from "../types";
 
 // Cabeçalho do site: logo, menu, carrinho e login
 // O menu muda conforme o perfil:
@@ -27,7 +28,7 @@ export function Header() {
       <div className="container header-content">
         <Link to={inicio} className="logo">
           {/* Logo neon da pasta public/img */}
-          <img src="/img/logo-404-burger.svg" alt="" className="logo-img" />
+          <img src={LOGO_SVG} alt="" className="logo-img" />
           <span className="logo-text">
             <strong className="glitch" data-text="404">404</strong> Burger
           </span>

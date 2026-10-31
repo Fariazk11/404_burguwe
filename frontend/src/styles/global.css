@@ -572,6 +572,24 @@ a.order-row:hover { background: rgba(42, 10, 74, 0.95); text-shadow: none; box-s
   color: var(--pink); border: 1px solid var(--pink); padding: 0.1rem 0.5rem;
 }
 .role-tag.role-cozinha { color: #ff9a3c; border-color: #ff9a3c; }
+.role-tag.role-cliente { color: var(--cyan); border-color: var(--cyan); }
+.role-tag.role-admin { color: var(--primary); border-color: var(--primary); }
+
+/* ===== Usuários (tela do admin) ===== */
+.usuario-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.usuario-info { display: flex; flex-direction: column; gap: 0.15rem; min-width: 220px; }
+.usuario-acoes { display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap; }
+.usuario-perfil { min-width: 150px; }
+.usuario-perfil select { padding: 0.45rem 0.6rem; }
+.usuario-senha { display: flex; gap: 0.4rem; align-items: center; }
+.usuario-senha input { width: 190px; padding: 0.45rem 0.6rem; }
+
+/* ===== Minha conta ===== */
+.conta-page { max-width: 900px; }
+.conta-info { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.conta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+a.user-name { text-decoration: none; }
+a.user-name:hover { text-decoration: underline; }
 .role-select { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .role-select .option { position: relative; flex: 1; flex-direction: column; align-items: flex-start; gap: 0.15rem; min-width: 140px; }
 .role-select .option input { position: absolute; opacity: 0; pointer-events: none; }
@@ -589,7 +607,7 @@ a.order-row:hover { background: rgba(42, 10, 74, 0.95); text-shadow: none; box-s
   .checkout-summary { position: static; }
   .detail-grid { grid-template-columns: 1fr; }
   .hero-logo { width: 180px; height: 180px; }
-  .mesa-layout, .funcionarios-layout { grid-template-columns: 1fr; }
+  .mesa-layout, .funcionarios-layout, .conta-grid { grid-template-columns: 1fr; }
   .comanda { position: static; max-height: none; }
 }
 

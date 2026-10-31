@@ -74,6 +74,16 @@ export const PAGAMENTO_LABEL: Record<FormaPagamento, string> = {
   DINHEIRO: "Dinheiro",
 };
 
+// Perfis de usuário e seus nomes amigáveis
+export type Perfil = "CLIENTE" | "STAFF" | "COZINHA" | "ADMIN";
+
+export const PERFIL_LABEL: Record<Perfil, string> = {
+  CLIENTE: "Cliente",
+  STAFF: "Garçom",
+  COZINHA: "Cozinha",
+  ADMIN: "Admin",
+};
+
 // Monta o caminho de um arquivo da pasta public respeitando o "base" do Vite.
 // Ex: asset("img/logo-404-burger.svg") -> "/404_burguwe/img/logo-404-burger.svg"
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;

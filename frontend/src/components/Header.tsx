@@ -51,7 +51,7 @@ export function Header() {
               <NavLink to="/mesas">Mesas</NavLink>
               <NavLink to="/painel">Cozinha</NavLink>
               <NavLink to="/admin/lanches">Lanches</NavLink>
-              <NavLink to="/admin/funcionarios">Funcionários</NavLink>
+              <NavLink to="/admin/usuarios">Usuários</NavLink>
             </>
           )}
         </nav>
@@ -69,7 +69,10 @@ export function Header() {
             <div className="user-info">
               {isGarcom && <span className="role-tag">Garçom</span>}
               {isCozinha && <span className="role-tag role-cozinha">Cozinha</span>}
-              <span className="user-name">&gt; {user.name.split(" ")[0]}_</span>
+              {/* Clicar no nome abre "Minha conta" (trocar nome e senha) */}
+              <Link to="/conta" className="user-name" title="Minha conta">
+                &gt; {user.name.split(" ")[0]}_
+              </Link>
               <button className="btn-outline btn-sm" onClick={signOut}>
                 Sair
               </button>

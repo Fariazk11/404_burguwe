@@ -16,6 +16,8 @@ import { PedidoDetalhe } from "./pages/PedidoDetalhe";
 import { Painel } from "./pages/Painel";
 import { Mesas } from "./pages/Mesas";
 import { Funcionarios } from "./pages/Funcionarios";
+import { Usuarios } from "./pages/Usuarios";
+import { MinhaConta } from "./pages/MinhaConta";
 import { AdminLanches } from "./pages/AdminLanches";
 import { LancheForm } from "./pages/LancheForm";
 import "./styles/global.css";
@@ -40,9 +42,12 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/pedidos" element={<MeusPedidos />} />
               </Route>
 
-              {/* Detalhe de um pedido: qualquer perfil (o backend só mostra se o pedido for dele) */}
+              {/* Qualquer perfil logado */}
               <Route element={<PrivateRoute />}>
+                {/* Detalhe de um pedido (o backend só mostra se o pedido for dele) */}
                 <Route path="/pedidos/:id" element={<PedidoDetalhe />} />
+                {/* Minha conta: trocar o próprio nome e a própria senha */}
+                <Route path="/conta" element={<MinhaConta />} />
               </Route>
 
               {/* Garçom (STAFF) e ADMIN: lançar os pedidos das mesas */}
@@ -57,6 +62,7 @@ createRoot(document.getElementById("root")!).render(
 
               {/* Rotas somente ADMIN */}
               <Route element={<PrivateRoute roles={["ADMIN"]} />}>
+                <Route path="/admin/usuarios" element={<Usuarios />} />
                 <Route path="/admin/funcionarios" element={<Funcionarios />} />
                 <Route path="/admin/lanches" element={<AdminLanches />} />
                 <Route path="/admin/lanches/novo" element={<LancheForm />} />

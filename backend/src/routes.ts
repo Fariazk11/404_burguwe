@@ -13,6 +13,12 @@ import { hasRole } from "./middlewares/hasRole";
 
 // ----- Schemas (regras de validação) -----
 import { createUserSchema, authUserSchema, createFuncionarioSchema } from "./schemas/userSchema";
+import {
+  updatePerfilSchema,
+  resetSenhaSchema,
+  updateMeSchema,
+  changeSenhaSchema,
+} from "./schemas/usuarioSchema";
 import { createLancheSchema, updateLancheSchema } from "./schemas/lancheSchema";
 import {
   createPedidoSchema,
@@ -28,6 +34,13 @@ import {
   CreateFuncionarioController,
   ListFuncionariosController,
 } from "./controllers/user/FuncionarioControllers";
+import {
+  ListUsuariosController,
+  UpdatePerfilController,
+  ResetSenhaController,
+  UpdateMeController,
+  ChangeSenhaController,
+} from "./controllers/user/UsuarioControllers";
 
 // ----- Controllers de lanche -----
 import { CreateLancheController } from "./controllers/lanche/CreateLancheController";
@@ -65,6 +78,40 @@ router.post(
 
 // Detalhes do usuário logado: precisa estar autenticado
 router.get("/me", isAuthenticated, new DetailUserController().handle);
+
+// ===== MINHA CONTA (qualquer usuário logado) =====
+// Alterar o próprio nome
+router.patch("/me", isAuthenticated, validateSchema(updateMeSchema), new UpdateMeController().handle);
+
+// Trocar a própria senha (precisa da senha atual)
+router.patch(
+  "/me/senha",
+  isAuthenticated,
+  validateSchema(changeSenhaSchema),
+  new ChangeSenhaController().handle
+);
+
+// ===== USUÁRIOS (somente ADMIN) =====
+// Listar todas as contas (?busca= filtra por nome ou e-mail)
+router.get("/usuarios", isAuthenticated, isAdmin, new ListUsuariosController().handle);
+
+// Mudar o perfil de uma conta (CLIENTE, STAFF, COZINHA ou ADMIN)
+router.patch(
+  "/usuarios/:id/perfil",
+  isAuthenticated,
+  isAdmin,
+  validateSchema(updatePerfilSchema),
+  new UpdatePerfilController().handle
+);
+
+// Definir uma senha nova para uma conta (ex: a pessoa esqueceu a senha)
+router.patch(
+  "/usuarios/:id/senha",
+  isAuthenticated,
+  isAdmin,
+  validateSchema(resetSenhaSchema),
+  new ResetSenhaController().handle
+);
 
 // ===== ROTAS DE FUNCIONÁRIO (somente ADMIN) =====
 // Criar conta da equipe: garçom (STAFF) ou COZINHA

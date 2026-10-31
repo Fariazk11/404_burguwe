@@ -18,6 +18,8 @@ interface AuthContextData {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => void;
+  // Atualiza os dados do usuário logado na tela (ex: depois de mudar o nome em "Minha conta")
+  updateUser: (dados: Partial<User>) => void;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -65,8 +67,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  function updateUser(dados: Partial<User>) {
+    setUser((atual) => (atual ? { ...atual, ...dados } : atual));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

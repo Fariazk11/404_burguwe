@@ -1,0 +1,47 @@
+# Blueprint do Render: cria o banco PostgreSQL e a API do 404 Burger de uma vez.
+# No Render: New → Blueprint → escolha este repositório → Apply.
+# Documentação: https://render.com/docs/blueprint-spec
+
+databases:
+  - name: burger404-db
+    databaseName: lanchonete
+    user: burger404
+    plan: free
+    region: virginia
+
+services:
+  - type: web
+    name: burger404-api
+    runtime: node
+    plan: free
+    region: virginia
+    # O backend fica na pasta backend/ deste repositório
+    rootDir: backend
+    # --include=dev: o prisma (CLI) e o typescript são devDependencies e são usados no build/start
+    buildCommand: npm ci --include=dev && npm run build
+    # Aplica as migrations, cria o cardápio e as contas de exemplo (só se não existirem) e sobe a API
+    startCommand: npm run start:prod
+    # Rota GET / devolve {"status":"online"}
+    healthCheckPath: /
+    # Só faz deploy quando algo dentro de backend/ muda
+    buildFilter:
+      paths:
+        - backend/**
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Conexão com o banco criado acima
+      - key: DATABASE_URL
+        fromDatabase:
+          name: burger404-db
+          property: connectionString
+      # Chave que assina os tokens de login (o Render gera um valor aleatório)
+      - key: JWT_SECRET
+        generateValue: true
+      # Senha das contas de exemplo (admin, funcionário e cozinha) no site publicado.
+      # O Render gera o valor; veja em Environment do serviço burger404-api.
+      - key: SEED_SENHA
+        generateValue: true
+      # Sites que podem chamar a API (o frontend no GitHub Pages e o ambiente local)
+      - key: CORS_ORIGIN
+        value: https://fariazk11.github.io,http://localhost:5173

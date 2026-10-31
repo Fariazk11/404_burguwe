@@ -8,6 +8,13 @@ import { cardapioCyberpunk } from "./cardapioCyberpunk";
 // Lanches de exemplo do cardápio (sem o campo nomeAntigo, que não existe no banco)
 const lanches = cardapioCyberpunk.map(({ nomeAntigo, ...lanche }) => lanche);
 
+// Senha das contas de exemplo.
+// - Local: senhas fáceis (admin123, func123, cozinha123)
+// - Produção (Render): todas usam a variável SEED_SENHA, gerada pelo Render, para que
+//   ninguém consiga entrar no site publicado com uma senha conhecida
+const senha = (padrao: string) => process.env.SEED_SENHA || padrao;
+const senhaLog = (padrao: string) => (process.env.SEED_SENHA ? "(senha da variável SEED_SENHA)" : padrao);
+
 async function main() {
   // Só cadastra os lanches se o cardápio estiver vazio
   const total = await prismaClient.lanche.count();
@@ -28,11 +35,11 @@ async function main() {
       data: {
         name: "Administrador",
         email: email,
-        password: await hash("admin123", 8),
+        password: await hash(senha("admin123"), 8),
         role: "ADMIN",
       },
     });
-    console.log(`Admin criado: ${email} / admin123`);
+    console.log(`Admin criado: ${email} / ${senhaLog("admin123")}`);
   }
 
   // Cria um FUNCIONÁRIO (STAFF) de exemplo: ele só vê os pedidos de mesa que lançar
@@ -44,11 +51,11 @@ async function main() {
       data: {
         name: "Garçom Exemplo",
         email: emailFuncionario,
-        password: await hash("func123", 8),
+        password: await hash(senha("func123"), 8),
         role: "STAFF",
       },
     });
-    console.log(`Funcionário criado: ${emailFuncionario} / func123`);
+    console.log(`Funcionário criado: ${emailFuncionario} / ${senhaLog("func123")}`);
   }
 
   // Cria uma conta da COZINHA de exemplo: vê todos os pedidos no painel
@@ -60,11 +67,11 @@ async function main() {
       data: {
         name: "Cozinha",
         email: emailCozinha,
-        password: await hash("cozinha123", 8),
+        password: await hash(senha("cozinha123"), 8),
         role: "COZINHA",
       },
     });
-    console.log(`Cozinha criada: ${emailCozinha} / cozinha123`);
+    console.log(`Cozinha criada: ${emailCozinha} / ${senhaLog("cozinha123")}`);
   }
 }
 

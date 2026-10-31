@@ -12,8 +12,11 @@ const app = express();
 
 // Habilita o recebimento de dados em formato JSON no corpo (body) das requisições
 app.use(express.json());
-// Habilita o CORS para todas as rotas
-app.use(cors());
+// Habilita o CORS: define quais sites podem chamar a API.
+// Em produção (Render) a variável CORS_ORIGIN lista os endereços permitidos, separados por vírgula
+// (ex: "https://fariazk11.github.io,http://localhost:5173"). Sem ela, qualquer site pode chamar.
+const corsOrigin = process.env.CORS_ORIGIN?.split(",").map((origem) => origem.trim());
+app.use(cors({ origin: corsOrigin && corsOrigin.length > 0 ? corsOrigin : "*" }));
 // Rota de status da API (abrir http://localhost:3333 no navegador mostra se está no ar)
 app.get("/", (_req: Request, res: Response) => {
   res.json({

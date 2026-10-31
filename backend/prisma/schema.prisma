@@ -54,8 +54,9 @@ model User {
   createdAt DateTime @default(now()) // data de criação (preenchida automaticamente)
   updatedAt DateTime @updatedAt // data da última atualização (automática)
 
-  pedidos  Pedido[] @relation("PedidosDoCliente") // pedidos feitos por este usuário
-  entregas Pedido[] @relation("EntregasDoEntregador") // entregas aceitas (perfil ENTREGADOR)
+  pedidos  Pedido[]  @relation("PedidosDoCliente") // pedidos feitos por este usuário
+  entregas Pedido[]  @relation("EntregasDoEntregador") // entregas aceitas (perfil ENTREGADOR)
+  resgates Resgate[] // pedidos de resgate do dinheiro ganho (perfil ENTREGADOR)
 
   @@map("users") // nome da tabela no banco
 }
@@ -100,8 +101,10 @@ model Pedido {
 
   // ----- Entrega (só quando tipoEntrega = ENTREGA) -----
   codigoEntrega      String? // código de 4 dígitos que o cliente informa ao entregador (novo a cada pedido)
-  tentativasCodigo   Int     @default(0) // códigos errados digitados pelo entregador (bloqueia em 5)
+  tentativasCodigo   Int       @default(0) // códigos errados digitados pelo entregador (bloqueia em 5)
   motivoCancelamento String? // motivo informado pelo entregador ao cancelar a entrega
+  entregueEm         DateTime? // quando o entregador finalizou (usado nos ganhos por dia)
+  ganhoEntregador    Float? // quanto o entregador ganhou nesta entrega (gravado ao finalizar)
 
   // Quem fez o pedido
   userId String
@@ -130,4 +133,29 @@ model ItemPedido {
   lanche   Lanche @relation(fields: [lancheId], references: [id])
 
   @@map("itens_pedido")
+}
+
+// Situação de um pedido de resgate do entregador
+enum StatusResgate {
+  SOLICITADO // pedido feito; aguardando o pagamento (integração bancária futura)
+  PAGO // dinheiro enviado ao entregador
+  CANCELADO // resgate cancelado; o valor volta para o saldo
+}
+
+// Pedidos de resgate (saque) do dinheiro ganho pelos entregadores.
+// Por enquanto o resgate fica como SOLICITADO: o envio ao banco/Pix será ligado
+// numa próxima versão (veja src/services/entrega/pagamentoResgate.ts).
+model Resgate {
+  id           String        @id @default(uuid())
+  valor        Float // valor pedido pelo entregador
+  chavePix     String // para onde o dinheiro deve ser enviado
+  status       StatusResgate @default(SOLICITADO)
+  observacao   String? // retorno do processamento (ex: id da transação ou motivo da recusa)
+  createdAt    DateTime      @default(now())
+  processadoEm DateTime? // quando foi pago ou cancelado
+
+  entregadorId String
+  entregador   User   @relation(fields: [entregadorId], references: [id])
+
+  @@map("resgates")
 }

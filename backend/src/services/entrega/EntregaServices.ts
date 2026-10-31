@@ -105,7 +105,13 @@ class FinalizarEntregaService {
 
     return prismaClient.pedido.update({
       where: { id },
-      data: { status: "ENTREGUE" },
+      data: {
+        status: "ENTREGUE",
+        entregueEm: new Date(),
+        // O entregador ganha a taxa de entrega do pedido (gravada agora: se a taxa
+        // mudar no futuro, o histórico de ganhos continua o mesmo)
+        ganhoEntregador: pedido.taxaEntrega,
+      },
       include: pedidoInclude,
       omit: pedidoOmitEquipe,
     });

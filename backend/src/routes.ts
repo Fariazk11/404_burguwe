@@ -47,8 +47,14 @@ import {
   AceitarEntregaController,
   FinalizarEntregaController,
   CancelarEntregaController,
+  ResumoGanhosController,
+  SolicitarResgateController,
 } from "./controllers/entrega/EntregaControllers";
-import { finalizarEntregaSchema, cancelarEntregaSchema } from "./schemas/entregaSchema";
+import {
+  finalizarEntregaSchema,
+  cancelarEntregaSchema,
+  solicitarResgateSchema,
+} from "./schemas/entregaSchema";
 
 // ----- Controllers de lanche -----
 import { CreateLancheController } from "./controllers/lanche/CreateLancheController";
@@ -213,6 +219,23 @@ router.get(
   isAuthenticated,
   hasRole(["ENTREGADOR"]),
   new ListMinhasEntregasController().handle
+);
+
+// Painel de ganhos: hoje, saldo disponível, ganhos por dia e resgates
+router.get(
+  "/entregas/ganhos",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  new ResumoGanhosController().handle
+);
+
+// Pedir resgate do saldo (por enquanto fica SOLICITADO; o envio ao banco vem depois)
+router.post(
+  "/entregas/resgates",
+  isAuthenticated,
+  hasRole(["ENTREGADOR"]),
+  validateSchema(solicitarResgateSchema),
+  new SolicitarResgateController().handle
 );
 
 // Aceitar uma entrega (o pedido passa para "Saiu para entrega")

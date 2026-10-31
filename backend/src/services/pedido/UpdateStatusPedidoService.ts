@@ -44,7 +44,14 @@ class UpdateStatusPedidoService {
 
     const pedidoAtualizado = await prismaClient.pedido.update({
       where: { id: id },
-      data: { status: status },
+      data: {
+        status: status,
+        // Se o ADMIN forçar "entregue" numa entrega, o entregador que estava com ela
+        // recebe o ganho normalmente (igual a quando ele finaliza com o código)
+        ...(status === "ENTREGUE" && pedido.tipoEntrega === "ENTREGA"
+          ? { entregueEm: new Date(), ganhoEntregador: pedido.entregadorId ? pedido.taxaEntrega : null }
+          : {}),
+      },
       include: pedidoInclude,
       omit: pedidoOmitEquipe,
     });

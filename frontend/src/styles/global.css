@@ -590,6 +590,27 @@ a.order-row:hover { background: rgba(42, 10, 74, 0.95); text-shadow: none; box-s
   padding-left: 0.6em; /* compensa o letter-spacing do último dígito */
 }
 
+/* ===== Ganhos do entregador ===== */
+.ganhos-stats .stat-saldo { border-color: var(--green); }
+.ganhos-stats .stat-saldo strong { color: var(--green); text-shadow: 0 0 10px rgba(57, 255, 136, 0.45); }
+.ganhos-stats .stat-saldo button { align-self: flex-start; margin-top: 0.25rem; }
+.ganhos-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.25rem; align-items: start; }
+.ganhos-vazio { padding: 1rem 0; }
+.ganhos-tabela { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.98rem; }
+.ganhos-tabela th {
+  text-align: left; font-family: var(--font-mono); font-weight: 400; font-size: 0.8rem;
+  color: var(--cyan); text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--pink);
+}
+.ganhos-tabela td { padding: 0.55rem 0.4rem; border-bottom: 1px dashed var(--border); }
+.ganhos-tabela td:not(:first-child), .ganhos-tabela th:not(:first-child) { text-align: right; }
+.resgates-titulo { margin-top: 0.75rem; color: var(--cyan); font-size: 0.85rem; }
+.resgates-lista { display: flex; flex-direction: column; gap: 0.5rem; }
+.resgates-lista li { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px dashed var(--border); }
+.status.resgate-SOLICITADO { color: var(--primary); background: rgba(252, 238, 10, 0.08); }
+.status.resgate-PAGO { color: var(--ok); background: rgba(57, 255, 136, 0.08); }
+.status.resgate-CANCELADO { color: var(--danger); background: rgba(255, 42, 109, 0.1); }
+
 /* ===== Código de entrega (tela do cliente) ===== */
 .codigo-entrega { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; border-color: var(--primary); }
 .codigo-entrega > div { display: flex; flex-direction: column; }
@@ -632,7 +653,7 @@ a.user-name:hover { text-decoration: underline; }
   .checkout-summary { position: static; }
   .detail-grid { grid-template-columns: 1fr; }
   .hero-logo { width: 180px; height: 180px; }
-  .mesa-layout, .funcionarios-layout, .conta-grid { grid-template-columns: 1fr; }
+  .mesa-layout, .funcionarios-layout, .conta-grid, .ganhos-layout { grid-template-columns: 1fr; }
   .comanda { position: static; max-height: none; }
 }
 
